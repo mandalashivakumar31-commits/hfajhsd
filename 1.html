@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Smart Campus Assistant</title>
+    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+    <div class="chatbot-container">
+        <header class="chatbot-header">
+            <h2>Smart Campus Assistant</h2>
+            <p>Ask about schedules, facilities, dining, library, and more.</p>
+        </header>
+        
+        <div class="chatbot-chatlog" id="chatlog" aria-live="polite" aria-relevant="additions"></div>
+        
+        <form class="chatbot-input-area" id="chat-form" aria-label="Send a message">
+            <input type="text" id="userInput" placeholder="Type your campus question here..." autocomplete="off" required aria-required="true" />
+            <button type="submit" aria-label="Send message">Send</button>
+        </form>
+    </div>
+
+    <script>
+      const chatlog = document.getElementById('chatlog');
+      const chatForm = document.getElementById('chat-form');
+
+      function createMessageDiv(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chatbot-message ' + sender;
+        messageDiv.textContent = text;
+
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'message-time';
+        const now = new Date();
+        timeSpan.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        messageDiv.appendChild(timeSpan);
+
+        return messageDiv;
+      }
+
+      function scrollToBottom() {
+        chatlog.scrollTo({ top: chatlog.scrollHeight, behavior: 'smooth' });
+      }
+
+      chatForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const input = document.getElementById('userInput');
+        if (!input.value.trim()) return;
+
+        // Add user message
+        const userMsg = createMessageDiv(input.value.trim(), 'user');
+        chatlog.appendChild(userMsg);
+        scrollToBottom();
+
+        // Clear input
+        input.value = '';
+
+        // Simulated bot response
+        setTimeout(() => {
+          const botResponse = generateBotResponse();
+          const botMsg = createMessageDiv(botResponse, 'bot');
+          chatlog.appendChild(botMsg);
+          scrollToBottom();
+        }, 800);
+      });
+
+      function generateBotResponse() {
+        // Placeholder for connecting to AI backend
+        const responses = [
+          "Sure, I can help you with campus facilities.",
+          "Currently, the library is open from 8 AM to 10 PM.",
+          "You have a class scheduled at 3 PM in Room 301.",
+          "The dining hall offers vegetarian options today.",
+          "I can assist you with administrative procedures as well."
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+    </script>
+</body>
+</html>
